@@ -1,13 +1,7 @@
-## [project-title] Changelog
+## Hybrid-Storage-Python-Manage-Storage-Account Changelog
 
-<a name="x.y.z"></a>
-# x.y.z (yyyy-mm-dd)
+<a name="1.0.0"></a>
+# 1.0.0 (2018-12-10)
 
 *Features*
-* ...
-
-*Bug Fixes*
-* ...
-
-*Breaking Changes*
-* ...
+* Adding python sample to manage Storage Accounts in hybrid clouds
