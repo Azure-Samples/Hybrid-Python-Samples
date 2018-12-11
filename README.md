@@ -1,57 +1,70 @@
-# Project Name
+---
+services: Azure-Stack
+platforms: python
+author: viananth
+---
 
-(short, 1-3 sentenced, description of the project)
+# Manage Storage Account in Hybrid Clouds with Python
 
-## Features
+This sample shows how to manage your storage account using the Azure Storage Management package for Python. The Storage Resource Provider is a client library for working with the storage accounts in your Azure subscription. Using the client library, you can create a new storage account, read its properties, list all storage accounts in a given subscription or resource group, read and regenerate the storage account keys, and delete a storage account.  
 
-This project framework provides the following features:
+**On this page**
 
-* Feature 1
-* Feature 2
-* ...
+- [Run this sample](#run)
+- What is example.py doing?
+    - Check storage account name availability
+    - Create a new storage account
+    - Get the properties of an account
+    - List storage accounts
+    - List storage accounts by resource group
+    - Get the storage account keys
+    - Regenerate a storage account key
+    - Delete a storage account
+    - Usage
 
-## Getting Started
+<a id="run"></a>
+## Run this sample
 
-### Prerequisites
+1. If you don't already have it, [install Python](https://www.python.org/downloads/).
 
-(ideally very short, if any)
+1. We recommend to use a [virtual environnement](https://docs.python.org/3/tutorial/venv.html) to run this example, but it's not mandatory. You can initialize a virtualenv this way:
 
-- OS
-- Library version
-- ...
+    ```
+    pip install virtualenv
+    virtualenv mytestenv
+    cd mytestenv
+    source bin/activate
+    ```
 
-### Installation
+1. Clone the repository.
 
-(ideally very short)
+    ```
+    git clone https://github.com/Azure-Samples/Hybrid-Storage-Python-Manage-Storage-Account.git
+    ```
 
-- npm install [package name]
-- mvn install
-- ...
+1. Install the dependencies using pip.
 
-### Quickstart
-(Add steps to get up and running quickly)
+    ```
+    cd Hybrid-Storage-Python-Manage-Storage-Account
+    pip install -r requirements.txt
+    ```
 
-1. git clone [repository clone url]
-2. cd [respository name]
-3. ...
+1. Create a [service principal](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals) to work against AzureStack. Make sure your service principal has [contributor/owner role](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals#assign-role-to-service-principal) on your subscription.
 
+1. Export these environment variables into your current shell. 
 
-## Demo
+    ```
+    export AZURE_RESOURCE_LOCATION={your resource location}
+    export AZURE_TENANT_ID={your tenant id}
+    export AZURE_CLIENT_ID={your client id}
+    export AZURE_CLIENT_SECRET={your client secret}
+    export AZURE_SUBSCRIPTION_ID={your subscription id}
+    export ARM_ENDPOINT={your AzureStack Resource Manager Endpoint}
+    ```
 
-A demo app is included to show how to use the project.
+1. Run the sample.
 
-To run the demo, follow these steps:
+    ```
+    python example.py
+    ```
 
-(Add steps to start up the demo)
-
-1.
-2.
-3.
-
-## Resources
-
-(Any additional resources or related projects)
-
-- Link to supporting information
-- Link to similar sample
-- ...
