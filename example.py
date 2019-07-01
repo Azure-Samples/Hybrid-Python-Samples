@@ -40,6 +40,7 @@ GROUP_NAME = 'azure-sample-group-resources-{}'.format(post_fix)
 # Storage Account
 STORAGE_ACCOUNT_NAME = Haikunator().haikunate(delimiter='')
 
+
 def get_credentials():
     mystack_cloud = get_cloud_from_metadata_endpoint(
         os.environ['ARM_ENDPOINT'])
@@ -52,6 +53,7 @@ def get_credentials():
     )
     return credentials, subscription_id, mystack_cloud
 
+
 def run_example():
     """Storage management example."""
     #
@@ -63,10 +65,10 @@ def run_example():
 
     credentials, subscription_id, mystack_cloud = get_credentials()
 
-    resource_client = ResourceManagementClient(credentials, subscription_id, 
-        base_url=mystack_cloud.endpoints.resource_manager)
-    storage_client = StorageManagementClient(credentials, subscription_id, 
-        base_url=mystack_cloud.endpoints.resource_manager)
+    resource_client = ResourceManagementClient(credentials, subscription_id,
+                                               base_url=mystack_cloud.endpoints.resource_manager)
+    storage_client = StorageManagementClient(credentials, subscription_id,
+                                             base_url=mystack_cloud.endpoints.resource_manager)
 
     # You MIGHT need to add Storage as a valid provider for these credentials
     # If so, this operation has to be done only once for each credentials
@@ -75,13 +77,16 @@ def run_example():
     # Create Resource group
     print('Create Resource Group')
     resource_group_params = {'location': LOCATION}
-    print_item(resource_client.resource_groups.create_or_update(GROUP_NAME, resource_group_params))
+    print_item(resource_client.resource_groups.create_or_update(
+        GROUP_NAME, resource_group_params))
 
     # Check availability
     print('Check name availability')
     bad_account_name = 'invalid-or-used-name'
-    availability = storage_client.storage_accounts.check_name_availability(bad_account_name)
-    print('The account {} is available: {}'.format(bad_account_name, availability.name_available))
+    availability = storage_client.storage_accounts.check_name_availability(
+        bad_account_name)
+    print('The account {} is available: {}'.format(
+        bad_account_name, availability.name_available))
     print('Reason: {}'.format(availability.reason))
     print('Detailed message: {}'.format(availability.message))
     print('\n\n')
@@ -122,7 +127,8 @@ def run_example():
 
     # Get the account keys
     print('Get the account keys')
-    storage_keys = storage_client.storage_accounts.list_keys(GROUP_NAME, STORAGE_ACCOUNT_NAME)
+    storage_keys = storage_client.storage_accounts.list_keys(
+        GROUP_NAME, STORAGE_ACCOUNT_NAME)
     storage_keys = {v.key_name: v.value for v in storage_keys.keys}
     print('\tKey 1: {}'.format(storage_keys['key1']))
     print('\tKey 2: {}'.format(storage_keys['key2']))
@@ -158,6 +164,7 @@ def run_example():
     for usage in storage_client.usage.list():
         print('\t{}'.format(usage.name.value))
 
+
 def print_item(group):
     """Print an Azure object instance."""
     print("\tName: {}".format(group.name))
@@ -167,12 +174,14 @@ def print_item(group):
     if hasattr(group, 'properties'):
         print_properties(group.properties)
 
+
 def print_properties(props):
     """Print a ResourceGroup properties instance."""
     if props and props.provisioning_state:
         print("\tProperties:")
         print("\t\tProvisioning State: {}".format(props.provisioning_state))
     print("\n\n")
+
 
 if __name__ == "__main__":
     run_example()
