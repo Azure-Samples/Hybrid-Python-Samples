@@ -1,7 +1,11 @@
 ---
-services: Azure-Stack
-platforms: python
-author: viananth
+page_type: sample
+languages:
+- python
+products:
+- azure
+description: "This sample shows how to manage your storage account using the Azure Storage Management package for Python."
+urlFragment: Hybrid-Storage-Python-Manage-Storage-Account
 ---
 
 # Hybrid-Storage-Python-Manage-Storage-Account
