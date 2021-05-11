@@ -17,9 +17,11 @@ import random
 import logging
 from haikunator import Haikunator
 from azure.profiles import KnownProfiles
-from azure.common.credentials import ServicePrincipalCredentials
+#from azure.common.credentials import ServicePrincipalCredentials
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.storage import StorageManagementClient
+from azure.identity import ClientSecretCredential
+
 from azure.mgmt.storage.models import (
     StorageAccountCreateParameters,
     StorageAccountUpdateParameters,
@@ -41,15 +43,13 @@ GROUP_NAME = 'azure-sample-group-resources-{}'.format(post_fix)
 STORAGE_ACCOUNT_NAME = Haikunator().haikunate(delimiter='')
 
 def get_credentials():
-    mystack_cloud = get_cloud_from_metadata_endpoint(
-        os.environ['ARM_ENDPOINT'])
+    mystack_cloud = get_cloud_from_metadata_endpoint(os.environ['ARM_ENDPOINT'])
     subscription_id = os.environ['AZURE_SUBSCRIPTION_ID']
-    credentials = ServicePrincipalCredentials(
+    credentials = ClientSecretCredential(
         client_id=os.environ['AZURE_CLIENT_ID'],
-        secret=os.environ['AZURE_CLIENT_SECRET'],
-        tenant=os.environ['AZURE_TENANT_ID'],
-        cloud_environment=mystack_cloud
-    )
+        client_secret=os.environ['AZURE_CLIENT_SECRET'],
+        tenant_id=os.environ['AZURE_TENANT_ID'],
+        authority=mystack_cloud.endpoints.active_directory)
     return credentials, subscription_id, mystack_cloud
 
 def run_example():
@@ -58,15 +58,26 @@ def run_example():
     # Create the Resource Manager Client with an Application (service principal) token provider
     #
     # By Default, use AzureStack supported profile
-    KnownProfiles.default.use(KnownProfiles.v2018_03_01_hybrid)
+    #KnownProfiles.default.use(KnownProfiles.v2018_03_01_hybrid)
     logging.basicConfig(level=logging.ERROR)
 
     credentials, subscription_id, mystack_cloud = get_credentials()
 
-    resource_client = ResourceManagementClient(credentials, subscription_id, 
-        base_url=mystack_cloud.endpoints.resource_manager)
-    storage_client = StorageManagementClient(credentials, subscription_id, 
-        base_url=mystack_cloud.endpoints.resource_manager)
+    # resource_client = ResourceManagementClient(credentials, subscription_id, 
+    #     base_url=mystack_cloud.endpoints.resource_manager)
+    scope = "openid profile offline_access" + " " + mystack_cloud.endpoints.active_directory_resource_id + "/.default"
+    resource_client = ResourceManagementClient(
+        credentials , subscription_id,
+        base_url=mystack_cloud.endpoints.resource_manager,
+        profile=KnownProfiles.v2020_09_01_hybrid,
+        credential_scopes=[scope])
+
+    storage_client = StorageManagementClient(
+        credentials,
+        subscription_id, 
+        base_url=mystack_cloud.endpoints.resource_manager,
+        profile=KnownProfiles.v2020_09_01_hybrid,
+        credential_scopes=[scope])
 
     # You MIGHT need to add Storage as a valid provider for these credentials
     # If so, this operation has to be done only once for each credentials
@@ -80,7 +91,7 @@ def run_example():
     # Check availability
     print('Check name availability')
     bad_account_name = 'invalid-or-used-name'
-    availability = storage_client.storage_accounts.check_name_availability(bad_account_name)
+    availability = storage_client.storage_accounts.check_name_availability({ "name": bad_account_name })
     print('The account {} is available: {}'.format(bad_account_name, availability.name_available))
     print('Reason: {}'.format(availability.reason))
     print('Detailed message: {}'.format(availability.message))
@@ -88,7 +99,7 @@ def run_example():
 
     # Create a storage account
     print('Create a storage account')
-    storage_async_operation = storage_client.storage_accounts.create(
+    storage_async_operation = storage_client.storage_accounts.begin_create(
         GROUP_NAME,
         STORAGE_ACCOUNT_NAME,
         {
@@ -133,7 +144,7 @@ def run_example():
     storage_keys = storage_client.storage_accounts.regenerate_key(
         GROUP_NAME,
         STORAGE_ACCOUNT_NAME,
-        'key1')
+        { "key_name" :'key1'} )
     storage_keys = {v.key_name: v.value for v in storage_keys.keys}
     print('\tNew key 1: {}'.format(storage_keys['key1']))
     print("\n\n")
@@ -148,14 +159,14 @@ def run_example():
 
     # Delete Resource group and everything in it
     print('Delete Resource Group')
-    delete_async_operation = resource_client.resource_groups.delete(GROUP_NAME)
-    delete_async_operation.wait()
+    delete_async_operation = resource_client.resource_groups.begin_delete(GROUP_NAME)
+    delete_async_operation.result()
     print("Deleted: {}".format(GROUP_NAME))
     print("\n\n")
 
     # List usage
     print('List usage')
-    for usage in storage_client.usage.list():
+    for usage in storage_client.usages.list_by_location(LOCATION):
         print('\t{}'.format(usage.name.value))
 
 def print_item(group):
