@@ -23,7 +23,6 @@ This sample shows how to manage your storage account using the Azure Storage Man
     - Get the storage account keys
     - Regenerate a storage account key
     - Delete a storage account
-    - Usage
 
 - [Run this sample](#run)
     ```

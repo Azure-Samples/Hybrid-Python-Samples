@@ -2,32 +2,29 @@
 Manage Storage Account - create a new storage account, read its properties,
 list all storage accounts in a given subscription or resource group,
 read and regenerate the storage account keys, and delete a storage account.
-This script expects that the following environment vars are set:
-AZURE_TENANT_ID: your Azure Active Directory tenant id or domain
-AZURE_CLIENT_ID: your Azure Active Directory Application Client ID
-AZURE_CLIENT_SECRET: your Azure Active Directory Application Secret
-AZURE_SUBSCRIPTION_ID: your Azure Subscription Id
-AZURE_RESOURCE_LOCATION: your resource location
-ARM_ENDPOINT: your cloud's resource manager endpoint
+This script expects that the following vars are set in azureAppSpConfig.json:
+tenantId: your Azure Active Directory tenant id or domain
+clientId: your Azure Active Directory Application Client ID
+clientSecret: your Azure Active Directory Application Secret
+subscriptionId: your Azure Subscription Id
+location: your resource location
+resourceManagerUrl: your cloud's resource manager endpoint
 """
-import json, os, random, logging
+import json, random, logging
 from haikunator import Haikunator
 from azure.profiles import KnownProfiles
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.storage import StorageManagementClient
 from azure.identity import ClientSecretCredential
 
-from azure.mgmt.storage.models import (
-    StorageAccountCreateParameters,
-    StorageAccountUpdateParameters,
-    Sku,
-    SkuName,
-    Kind
-)
-
+# from azure.mgmt.storage.models import (
+#     StorageAccountCreateParameters,
+#     StorageAccountUpdateParameters,
+#     Sku,
+#     SkuName,
+#     Kind
+# )
 from msrestazure.azure_cloud import get_cloud_from_metadata_endpoint
-
-
 
 # Resource Group
 post_fix = random.randint(100, 500)
@@ -58,6 +55,7 @@ def run_example(config):
     LOCATION = config['location']
     credentials, subscription_id, mystack_cloud = get_credentials(config)
     scope = "openid profile offline_access" + " " + mystack_cloud.endpoints.active_directory_resource_id + "/.default"
+    
     resource_client = ResourceManagementClient(
         credentials , subscription_id,
         base_url=mystack_cloud.endpoints.resource_manager,
@@ -156,10 +154,6 @@ def run_example(config):
     print("Deleted: {}".format(GROUP_NAME))
     print("\n\n")
 
-    # List usage
-    print('List usage')
-    for usage in storage_client.usages.list_by_location(LOCATION):
-        print('\t{}'.format(usage.name.value))
 
 def print_item(group):
     """Print an Azure object instance."""
@@ -170,12 +164,14 @@ def print_item(group):
     if hasattr(group, 'properties'):
         print_properties(group.properties)
 
+
 def print_properties(props):
     """Print a ResourceGroup properties instance."""
     if props and props.provisioning_state:
         print("\tProperties:")
         print("\t\tProvisioning State: {}".format(props.provisioning_state))
     print("\n\n")
+
 
 if __name__ == "__main__":
     with open('../azureAppSpConfig.json', 'r') as f:

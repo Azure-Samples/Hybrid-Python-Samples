@@ -74,7 +74,7 @@ def run_example(config):
         'location': location,
         'properties': {
             'sku': {'family': 'A', 'name': 'standard'},
-            'tenantId': os.environ['AZURE_TENANT_ID'],
+            'tenantId': config['tenantId'],
             'accessPolicies': [],
             'enabledForDeployment': True,
             'enabledForTemplateDeployment': True,

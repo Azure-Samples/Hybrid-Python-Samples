@@ -1,8 +1,9 @@
 {
-    "clientId": "",
-    "clientSecret": "",
-    "subscriptionId": "",
-    "tenantId": "",
-    "resourceManagerUrl": "",
-    "location": ""
+    "clientId": "de8c59a3-4877-45df-8197-45089d0fb34b",
+    "clientSecret": "N732dqj~~_P-OJpqcH6P23HQ_Tv0t34WIg",
+    "clientObjectId": "",
+    "subscriptionId": "6cf9e4d3-0c29-4dfc-8c70-cc37b94de146",
+    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+    "resourceManagerUrl": "https://management.azure.com/",
+    "location": "westus"
 }

@@ -130,7 +130,7 @@ def run_example(config):
         storage_async_operation.result()
 
         # Create a NIC
-        nic = create_nic(network_client)
+        nic = create_nic(network_client, LOCATION)
 
         #############
         # VM Sample #
@@ -138,7 +138,7 @@ def run_example(config):
 
         # Create Linux VM
         print('\nCreating Linux Virtual Machine')
-        vm_parameters = create_vm_parameters(nic.id, VM_REFERENCE['linux'])
+        vm_parameters = create_vm_parameters(nic.id, VM_REFERENCE['linux'], LOCATION)
         async_vm_creation = compute_client.virtual_machines.begin_create_or_update(
             GROUP_NAME,
             VM_NAME,
@@ -272,7 +272,7 @@ def run_example(config):
         # Create Windows VM
         print('\nCreating Windows Virtual Machine')
         # Recycling NIC of previous VM
-        vm_parameters = create_vm_parameters(nic.id, VM_REFERENCE['windows'])
+        vm_parameters = create_vm_parameters(nic.id, VM_REFERENCE['windows'], LOCATION)
         async_vm_creation = compute_client.virtual_machines.begin_create_or_update(
             GROUP_NAME, VM_NAME, vm_parameters)
         async_vm_creation.result()
@@ -289,7 +289,7 @@ def run_example(config):
         print("\nDeleted: {}".format(GROUP_NAME))
 
 
-def create_nic(network_client):
+def create_nic(network_client, LOCATION):
     """Create a Network Interface for a VM.
     """
     # Create VNet
@@ -334,7 +334,7 @@ def create_nic(network_client):
     return async_nic_creation.result()
 
 
-def create_vm_parameters(nic_id, vm_reference):
+def create_vm_parameters(nic_id, vm_reference, LOCATION):
     """Create the VM parameters structure.
     """
     return {
