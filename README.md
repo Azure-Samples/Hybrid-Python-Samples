@@ -5,10 +5,10 @@ languages:
 products:
 - azure
 description: "This sample shows how to manage your storage account using the Azure Storage Management package for Python."
-urlFragment: Hybrid-Storage-Python-Manage-Storage-Account
+urlFragment: Hybrid-Python-Samples
 ---
 
-# Hybrid-Storage-Python-Manage-Storage-Account
+# Hybrid-Python-Samples
 
 This sample shows how to manage your storage account using the Azure Storage Management package for Python. The Storage Resource Provider is a client library for working with the storage accounts in your Azure subscription. Using the client library, you can create a new storage account, read its properties, list all storage accounts in a given subscription or resource group, read and regenerate the storage account keys, and delete a storage account.  
 
@@ -55,16 +55,16 @@ This sample shows how to manage your storage account using the Azure Storage Man
 
 1. Create a [service principal](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals) to work against AzureStack. Make sure your service principal has [contributor/owner role](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals#assign-role-to-service-principal) on your subscription.
 
-1. Export these environment variables into your current shell. 
+1. Set the following JSON properties in ./azureAppSpConfig.json.
 
-    ```
-    export AZURE_RESOURCE_LOCATION={your resource location}
-    export AZURE_TENANT_ID={your tenant id}
-    export AZURE_CLIENT_ID={your client id}
-    export AZURE_CLIENT_SECRET={your client secret}
-    export AZURE_SUBSCRIPTION_ID={your subscription id}
-    export ARM_ENDPOINT={your AzureStack Resource Manager Endpoint}
-    ```
+    | Variable              | Description                                                 |
+    |-----------------------|-------------------------------------------------------------|
+    | `clientId`            | Service principal application id.                            |
+    | `clientSecret`        | Service principal application secret.                        |
+    | `tenantId`            | Azure Stack Hub tenant id.                                   |
+    | `subscriptionId`      | Subscription id used to access offers in Azure Stack Hub.    |
+    | `resourceManagerUrl`  | Azure Stack Hub Resource Manager Endpoint.                   |
+    | `location`            | Azure Resource location.                                     |
 
 1. Run the sample.
 
