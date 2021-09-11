@@ -17,13 +17,6 @@ from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.storage import StorageManagementClient
 from azure.identity import ClientSecretCredential
 
-# from azure.mgmt.storage.models import (
-#     StorageAccountCreateParameters,
-#     StorageAccountUpdateParameters,
-#     Sku,
-#     SkuName,
-#     Kind
-# )
 from msrestazure.azure_cloud import get_cloud_from_metadata_endpoint
 
 # Resource Group
@@ -41,6 +34,7 @@ def get_credentials(config):
         client_secret = config['clientSecret'],
         tenant_id = config['tenantId'],
         authority = mystack_cloud.endpoints.active_directory)
+
     return credentials, subscription_id, mystack_cloud
 
 def run_example(config):
