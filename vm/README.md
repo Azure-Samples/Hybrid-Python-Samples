@@ -4,7 +4,8 @@ languages:
 - python
 products:
 - azure
-description: "These samples demonstrate how to perform common management tasks"
+description: "These samples demonstrate how to perform common management tasks with Microsoft AzureStack Virtual Machines
+using the Azure SDK for Python"
 urlFragment: Hybrid-Python-Sample-VM
 ---
 

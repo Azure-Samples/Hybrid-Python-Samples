@@ -24,6 +24,6 @@ def run_example(config):
     # deployer.destroy()
 
 if __name__ == "__main__":
-    with open('..\azureAppSpConfig.json', 'r') as f:
+    with open('../azureAppSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)

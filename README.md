@@ -4,30 +4,20 @@ languages:
 - python
 products:
 - azure
-description: "This sample shows how to manage your storage account using the Azure Storage Management package for Python."
+description: "samples to demonstrate various interaction with azure stack using azure python SDK."
 urlFragment: Hybrid-Python-Samples
 ---
 
 # Hybrid-Python-Samples
 
-This sample shows how to manage your storage account using the Azure Storage Management package for Python. The Storage Resource Provider is a client library for working with the storage accounts in your Azure subscription. Using the client library, you can create a new storage account, read its properties, list all storage accounts in a given subscription or resource group, read and regenerate the storage account keys, and delete a storage account.  
+This repository is for Azure Stack Hub python sdk samples. Each of the sub-directories contain README.md files detailing how to run that sample.
 
-**On this page**
+ 
 
-- [Run this sample](#run)
-- What is example.py doing?
-    - Check storage account name availability
-    - Create a new storage account
-    - Get the properties of an account
-    - List storage accounts
-    - List storage accounts by resource group
-    - Get the storage account keys
-    - Regenerate a storage account key
-    - Delete a storage account
-    - Usage
+**Prerequisites**
 
-<a id="run"></a>
-## Run this sample
+Refer to this azure stack doc for more information: https://docs.microsoft.com/en-us/azure-stack/user/azure-stack-version-profiles-python
+
 
 1. If you don't already have it, [install Python](https://www.python.org/downloads/).
 
@@ -43,7 +33,7 @@ This sample shows how to manage your storage account using the Azure Storage Man
 1. Clone the repository.
 
     ```
-    git clone https://github.com/Azure-Samples/Hybrid-Storage-Python-Manage-Storage-Account.git
+    git clone https://github.com/Azure-Samples/Hybrid-Python-Samples.git
     ```
 
 1. Install the dependencies using pip.
@@ -61,12 +51,13 @@ This sample shows how to manage your storage account using the Azure Storage Man
     |-----------------------|-------------------------------------------------------------|
     | `clientId`            | Service principal application id.                            |
     | `clientSecret`        | Service principal application secret.                        |
-    | `tenantId`            | Azure Stack Hub tenant id.                                   |
+    | `tenantId`            | Azure Stack Hub tenant id. 
+    | `clientObjectId`            | Service principal object id.                                   |
     | `subscriptionId`      | Subscription id used to access offers in Azure Stack Hub.    |
     | `resourceManagerUrl`  | Azure Stack Hub Resource Manager Endpoint.                   |
     | `location`            | Azure Resource location.                                     |
 
-1. Run the sample.
+1. Run the sample
 
     ```
     python example.py
