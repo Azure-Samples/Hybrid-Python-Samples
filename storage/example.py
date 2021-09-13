@@ -119,8 +119,9 @@ def run_example(config):
     print('Get the account keys')
     storage_keys = storage_client.storage_accounts.list_keys(GROUP_NAME, STORAGE_ACCOUNT_NAME)
     storage_keys = {v.key_name: v.value for v in storage_keys.keys}
-    print('\tKey 1: {}'.format(storage_keys['key1']))
-    print('\tKey 2: {}'.format(storage_keys['key2']))
+    print('\tKey 1: {}'.format('key1'))
+    print('\tKey 2: {}'.format('key2'))
+    print('Retrieved the storage account keys successfully.')
     print("\n\n")
 
     # Regenerate the account key 1
@@ -130,7 +131,7 @@ def run_example(config):
         STORAGE_ACCOUNT_NAME,
         { "key_name" :'key1'} )
     storage_keys = {v.key_name: v.value for v in storage_keys.keys}
-    print('\tNew key 1: {}'.format(storage_keys['key1']))
+    print('Regenerated the storage account key successfully.')
     print("\n\n")
 
     print_item(storage_account)
