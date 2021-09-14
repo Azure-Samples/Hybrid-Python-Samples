@@ -4,7 +4,7 @@ from deployer import Deployer
 def run_example(config):
     my_subscription_id = config['subscriptionId']   # your Azure Subscription Id
     my_resource_group = 'azure-python-deployment-sample'            # the resource group for deployment
-    my_pub_ssh_key_path = os.path.expanduser('~/id_rsa.pub')   # the path to your rsa public key file
+    my_pub_ssh_key_path = os.path.expanduser('~/.ssh/id_rsa.pub')   # the path to your rsa public key file
 
     msg = "\nInitializing the Deployer class with subscription id: {}, resource group: {}" \
         "\nand public key located at: {}...\n\n"
