@@ -48,7 +48,8 @@ class Deployer(object):
     def deploy(self):
         """Deploy the template to a resource group."""
 
-        self.client.resource_groups.create_or_update(self.resource_group, resource_group_params = {'location': self.location})
+        resource_group_params = {'location': self.location}
+        self.client.resource_groups.create_or_update(self.resource_group, resource_group_params)
 
         template_path = os.path.join(os.path.dirname(__file__), 'template.json')
         with open(template_path, 'r') as template_file_fd:
