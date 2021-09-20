@@ -18,10 +18,13 @@ def run_example(config):
     # Deploy the template
     my_deployment = deployer.deploy()
 
-    print("Done deploying!!\n\nYou can connect via: `ssh azureSample@{}.local.cloudapp.azurestack.external`".format(deployer.dns_label_prefix))
+    print("Done deploying!!")
 
-    # Destroy the resource group which contains the deployment
-    # deployer.destroy()
+
+    print("Cleaning up the deployment... \n\n")
+    #Destroy the resource group which contains the deployment
+    deployer.destroy()
+    print("Clean up the deployment sucessfully. \n")
 
 if __name__ == "__main__":
     with open('../azureAppSpConfig.json', 'r') as f:
