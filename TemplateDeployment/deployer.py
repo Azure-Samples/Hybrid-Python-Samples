@@ -75,5 +75,5 @@ class Deployer(object):
 
     def destroy(self):
         """Destroy the given resource group"""
-        self.client.resource_groups.delete(self.resource_group)
+        self.client.resource_groups.begin_delete(self.resource_group).result()
         print("\nDeleted: {}".format(self.resource_group))
