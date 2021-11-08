@@ -2,7 +2,7 @@
 Manage resources and resource groups - create, update and delete a resource group,
 deploy a solution into a resource group, export an ARM template. Create, read, update
 and delete a resource.
-This script expects that the following environment vars are present in azureAppSpConfig.json:
+This script expects that the following environment vars are present in azureSecretSpConfig.json:
 tenantId: your Azure Active Directory tenant id or domain
 clientId: your Azure Active Directory Application Client ID
 clientSecret: your Azure Active Directory Application Secret
@@ -130,6 +130,6 @@ def print_properties(props):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)

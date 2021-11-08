@@ -14,7 +14,7 @@ class Deployer(object):
     """ Initialize the deployer class with config, resource group and public key.
 
     :raises IOError: If the public key path cannot be read (access or not exists)
-    :raises KeyError: If clientId, clientSecret or tenantId variables are not defined in azureAppSpConfig.json
+    :raises KeyError: If clientId, clientSecret or tenantId variables are not defined in azureSecretSpConfig.json
     """
     name_generator = Haikunator()
 

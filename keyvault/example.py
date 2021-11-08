@@ -4,7 +4,7 @@ Retrieve the secret from the keyvault.
 List all the keyvaults in the resource group.
 Delete keyvault and resource group.
 
-This script expects that the following vars are set in azureAppSpConfig.json:
+This script expects that the following vars are set in azureSecretSpConfig.json:
 
 tenantId: your Azure Active Directory tenant id or domain
 clientObjectId: The object ID of the User or Application for access policies.
@@ -146,6 +146,6 @@ def print_item(group):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)
