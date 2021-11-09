@@ -1,3 +1,10 @@
+# Visual Studio Code
+.vscode/
+
+# Azure Stack configuration
+azureAppSpConfig.json
+azureCertSpConfig.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
