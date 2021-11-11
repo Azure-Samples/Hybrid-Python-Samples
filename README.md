@@ -37,7 +37,7 @@ Refer to this azure stack doc for more information: https://docs.microsoft.com/e
     ```
 
 1. Create a [service principal](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals) to work against AzureStack. Make sure your service principal has [contributor/owner role](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals#assign-role-to-service-principal) on your subscription.
-1. Rename `azureAppSpConfig.json.dist` and `azureCertSpConfig.json.dist` to `azureAppSpConfig.json` and `azureCertSpConfig.json` (whichever is needed).
+1. Make a copy of `azureAppSpConfig.json.dist` and `azureCertSpConfig.json.dist`, then rename those copies to `azureAppSpConfig.json` and `azureCertSpConfig.json` (whichever is needed).
 1. Set the following JSON properties in ./azureAppSpConfig.json.
     | Variable              | Description                                                 |
     |-----------------------|-------------------------------------------------------------|
