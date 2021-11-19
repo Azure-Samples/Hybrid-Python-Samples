@@ -49,89 +49,92 @@ def run_example(config):
     # Create the Resource Manager Client with an Application (service principal) token provider
     #
     # By Default, use AzureStack supported profile
-    KnownProfiles.default.use(KnownProfiles.v2020_09_01_hybrid)
-
-    credentials, subscription_id, mystack_cloud = get_credentials(config)
-    scope = "openid profile offline_access" + " " + mystack_cloud.endpoints.active_directory_resource_id + "/.default"
     
-    resource_client = ResourceManagementClient(
-        credentials,
-        subscription_id,
-        base_url=mystack_cloud.endpoints.resource_manager,
-        profile=KnownProfiles.v2020_09_01_hybrid,
-        credential_scopes=[scope])
+    try:
+        KnownProfiles.default.use(KnownProfiles.v2020_09_01_hybrid)
 
-    kv_client = KeyVaultManagementClient(credentials,
-                subscription_id,
-                base_url=mystack_cloud.endpoints.resource_manager,
-                profile=KnownProfiles.v2020_09_01_hybrid,
-                credential_scopes=[scope])
+        credentials, subscription_id, mystack_cloud = get_credentials(config)
+        scope = "openid profile offline_access" + " " + mystack_cloud.endpoints.active_directory_resource_id + "/.default"
+        
+        resource_client = ResourceManagementClient(
+            credentials,
+            subscription_id,
+            base_url=mystack_cloud.endpoints.resource_manager,
+            profile=KnownProfiles.v2020_09_01_hybrid,
+            credential_scopes=[scope])
 
-    # Azure Data center
-    LOCATION = config['location']
+        kv_client = KeyVaultManagementClient(credentials,
+                    subscription_id,
+                    base_url=mystack_cloud.endpoints.resource_manager,
+                    profile=KnownProfiles.v2020_09_01_hybrid,
+                    credential_scopes=[scope])
 
-    # Resource Group
-    post_fix = random.randint(100, 500)
-    GROUP_NAME = 'azure-sample-group-resources-{}'.format(post_fix)
+        # Azure Data center
+        LOCATION = config['location']
 
-    # Create Resource group
-    print('Create Resource Group')
-    resource_group_params = {'location': LOCATION}
-    print_item(resource_client.resource_groups.create_or_update(GROUP_NAME, resource_group_params))
+        # Resource Group
+        post_fix = random.randint(100, 500)
+        GROUP_NAME = 'azure-sample-group-resources-{}'.format(post_fix)
 
-    # Create a vault
-    print('\nCreate a vault')
-    vault = kv_client.vaults.begin_create_or_update(
-        GROUP_NAME,
-        KV_NAME,
-        {
-            'location': LOCATION,
-            'properties': {
-                'sku': {
-                    'name': 'standard',
-                    'family': 'A'
-                },
-                'tenant_id': config['tenantId'],
-                'access_policies': [{
+        # Create Resource group
+        print('Create Resource Group')
+        resource_group_params = {'location': LOCATION}
+        print_item(resource_client.resource_groups.create_or_update(GROUP_NAME, resource_group_params))
+
+        # Create a vault
+        print('\nCreate a vault')
+        vault = kv_client.vaults.begin_create_or_update(
+            GROUP_NAME,
+            KV_NAME,
+            {
+                'location': LOCATION,
+                'properties': {
+                    'sku': {
+                        'name': 'standard',
+                        'family': 'A'
+                    },
                     'tenant_id': config['tenantId'],
-                    'object_id': config['clientObjectId'],
-                    'permissions': {
-                        'keys': ['all'],
-                        'secrets': ['all']
-                    }
-                }]
+                    'access_policies': [{
+                        'tenant_id': config['tenantId'],
+                        'object_id': config['clientObjectId'],
+                        'permissions': {
+                            'keys': ['all'],
+                            'secrets': ['all']
+                        }
+                    }]
+                }
             }
-        }
-    )
-    created_vault = vault.result()
-    print_item(created_vault)
+        )
+        created_vault = vault.result()
+        print_item(created_vault)
 
-    kv_data_client = SecretClient(vault_url=created_vault.properties.vault_uri, credential=credentials)
+        kv_data_client = SecretClient(vault_url=created_vault.properties.vault_uri, credential=credentials)
 
-    #set and get a secret from the vault to validate the client is authenticated
-    print('creating secret...')
-    secret_bundle = kv_data_client.set_secret('auth-sample-secret', 'client is authenticated to the vault')
-    print(secret_bundle)
+        #set and get a secret from the vault to validate the client is authenticated
+        print('creating secret...')
+        secret_bundle = kv_data_client.set_secret('auth-sample-secret', 'client is authenticated to the vault')
+        print(secret_bundle)
 
-    print('getting secret...')
-    secret_retrived = kv_data_client.get_secret(secret_bundle.name)
-        #vault.properties.vault_uri, 'auth-sample-secret', secret_version=KeyVaultId.version_none)
-    print(secret_retrived)
+        print('getting secret...')
+        secret_retrived = kv_data_client.get_secret(secret_bundle.name)
+            #vault.properties.vault_uri, 'auth-sample-secret', secret_version=KeyVaultId.version_none)
+        print(secret_retrived)
 
-    # List the Key vaults
-    print('\nList KeyVaults')
-    for vault in kv_client.vaults.list():
-        print_item(vault)
+        # List the Key vaults
+        print('\nList KeyVaults')
+        for vault in kv_client.vaults.list():
+            print_item(vault)
 
-    # Delete keyvault
-    print('\nDelete Keyvault')
-    kv_client.vaults.delete(GROUP_NAME, KV_NAME)
-
-    # Delete Resource group and everything in it
-    print('\nDelete Resource Group')
-    delete_async_operation = resource_client.resource_groups.begin_delete(GROUP_NAME)
-    delete_async_operation.result()
-    print("\nDeleted: {}".format(GROUP_NAME))
+        # Delete keyvault
+        print('\nDelete Keyvault')
+        kv_client.vaults.delete(GROUP_NAME, KV_NAME)
+    
+    finally:
+        # Delete Resource group and everything in it
+        print('\nDelete Resource Group')
+        delete_async_operation = resource_client.resource_groups.begin_delete(GROUP_NAME)
+        delete_async_operation.result()
+        print("\nDeleted: {}".format(GROUP_NAME))
 
 
 def print_item(group):
