@@ -364,6 +364,6 @@ def create_vm_parameters(nic_id, vm_reference, LOCATION):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)

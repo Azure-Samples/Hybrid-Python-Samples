@@ -2,7 +2,7 @@
 .vscode/
 
 # Azure Stack configuration
-azureAppSpConfig.json
+azureSecretSpConfig.json
 azureCertSpConfig.json
 
 # Byte-compiled / optimized / DLL files

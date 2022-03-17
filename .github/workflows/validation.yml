@@ -1,0 +1,102 @@
+name: Validation
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+    branches:
+      - master
+  workflow_dispatch:
+    inputs:
+      identity_provider:
+        description: '[Optional] Select an identity provider, "aad" or "adfs", to run on the selected ASH environment type. By default runs all samples in an AAD and ADFS environment.'
+        required: false
+      samples:
+        description: '[Optional] Enter semicolon delimted list of sample folder(s). E.g., "resourcegroup;storage" or "storage". By default all samples are run.'
+        required: false
+
+jobs:
+  Prepare_CI:
+    runs-on: org
+    steps:
+      - name: Prepare ci and process inputs.
+        id: prepare_ci_and_input
+        shell: pwsh
+        run: |
+          Import-Module ([System.IO.Path]::Combine($env:AZURESTACK_SDK_CI_REPO,"common.psm1"))
+          $config = Import-ConfigFile
+
+          # Get a random AAD and ADFS environment
+          $inputIdProvider = "${{ github.event.inputs.identity_provider }}" 
+          $environmentJsonArray = Resolve-IdProviderToEnvironmentJSONArray -Config $config -InputIdentityProvider $inputIdProvider
+          echo "::set-output name=ENVIRONMENT_JSON_ARRAY::${environmentJsonArray}"
+
+          # Create JSON string output of samples to run.
+          $branch = ""
+          if ("${{ github.head_ref }}")
+          {
+            $branch  = "${{ github.head_ref }}"
+          }
+          else
+          {
+            $branch = ("${{ github.ref }}" -split "/")[-1]
+          }
+          $inputSamples = ""
+          if ("${{ github.event.inputs.samples }}")
+          {
+            $inputSamples = "python:${branch}:[${{ github.event.inputs.samples }}]"
+          }
+          else
+          {
+            $inputSamples = "python:${branch}"
+          }
+          $inputJsonArrayString = Resolve-SamplesInputToSamplesJsonArray -Config $config `
+            -Samples $inputSamples
+          echo "::set-output name=INPUT_JSON_ARRAY::${inputJsonArrayString}"
+
+    outputs:
+      ENVIRONMENT_JSON_ARRAY: ${{ steps.prepare_ci_and_input.outputs.ENVIRONMENT_JSON_ARRAY }}
+      INPUT_JSON_ARRAY: ${{ steps.prepare_ci_and_input.outputs.INPUT_JSON_ARRAY }}
+
+  Samples_CI:
+    runs-on: org
+    needs: Prepare_CI
+    strategy:
+      fail-fast: false
+      matrix:
+        ENVIRONMENT_JSON_ARRAY: ${{ fromJson(needs.Prepare_CI.outputs.ENVIRONMENT_JSON_ARRAY) }}
+        INPUT_JSON_ARRAY: ${{ fromJson(needs.Prepare_CI.outputs.INPUT_JSON_ARRAY) }}
+    steps:
+      - name: Log in with Azure.
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_SP_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - name: Run Azure Stack SDK Samples.
+        shell: pwsh
+        run: |
+          # Import static CI repo common module containing updater code.
+          Import-Module ([System.IO.Path]::Combine($env:AZURESTACK_SDK_CI_REPO,"common.psm1"))
+          $config = Import-ConfigFile
+
+          # Clone latest version of CI repo.
+          $githubWorkspace = "${{ github.workspace }}"
+          $githubWorkspaceParent = Split-Path -Path $githubWorkspace
+          $ciRepoPath = "${githubWorkspaceParent}\ci-repo"
+          Write-Host -Message "Updating CI files at ${ciRepoPath}."
+          Update-CIFiles -GithubAppId $config.githubAppId `
+            -RSAPrivateKeyFilePath (Resolve-PathExpression -UnresolvedPath $config.rsaPrivateKeyFilePath) `
+            -CIRepoPath $ciRepoPath
+          Write-Host -Message "Finished updating CI files at ${ciRepoPath}:"
+          Get-ChildItem -Path $ciRepoPath
+
+          # Remove old common module and import the recently cloned common module.
+          Remove-Module -Name common
+          Import-Module ([System.IO.Path]::Combine($ciRepoPath,"common.psm1"))
+          $config = Import-ConfigFile
+          
+          Write-Host -Message "Current workspace: $githubWorkspace"
+          & "${ciRepoPath}\invoke-samplesinparallel.ps1" -Sample "${{ matrix.INPUT_JSON_ARRAY }}" `
+            -EnvironmentName "${{ matrix.ENVIRONMENT_JSON_ARRAY }}" `
+            -SamplesRootPath $githubWorkspace
