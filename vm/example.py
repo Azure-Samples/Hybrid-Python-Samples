@@ -66,7 +66,7 @@ def run_example(config):
     # Create all clients with an Application (service principal) token provider
     #
     mystack_cloud = get_cloud_from_metadata_endpoint(
-        config['resourceManagerUrl'])
+        config['resourceManagerEndpointUrl'])
     
     subscription_id = config['subscriptionId']
     # Azure Datacenter
@@ -364,6 +364,6 @@ def create_vm_parameters(nic_id, vm_reference, LOCATION):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)

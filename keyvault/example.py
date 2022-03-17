@@ -4,15 +4,15 @@ Retrieve the secret from the keyvault.
 List all the keyvaults in the resource group.
 Delete keyvault and resource group.
 
-This script expects that the following vars are set in azureAppSpConfig.json:
+This script expects that the following vars are set in azureSecretSpConfig.json:
 
 tenantId: your Azure Active Directory tenant id or domain
-clientObjectId: The object ID of the User or Application for access policies.
+objectId: The object ID of the User or Application for access policies.
 clientId: your Azure Active Directory Application Client ID
 clientSecret: your Azure Active Directory Application Secret
 subscriptionId: your Azure Subscription Id
 AZURE_RESOURCE_LOCATION: your resource location
-resourceManagerUrl: your cloud's resource manager endpoint
+resourceManagerEndpointUrl: your cloud's resource manager endpoint
 """
 
 import json, logging, random
@@ -31,7 +31,7 @@ KV_NAME = haikunator.haikunate()
 
 def get_credentials(config):
     mystack_cloud = get_cloud_from_metadata_endpoint(
-        config['resourceManagerUrl'])
+        config['resourceManagerEndpointUrl'])
     subscription_id = config['subscriptionId']
 
     credentials = ClientSecretCredential(
@@ -96,7 +96,7 @@ def run_example(config):
                     'tenant_id': config['tenantId'],
                     'access_policies': [{
                         'tenant_id': config['tenantId'],
-                        'object_id': config['clientObjectId'],
+                        'object_id': config['objectId'],
                         'permissions': {
                             'keys': ['all'],
                             'secrets': ['all']
@@ -146,6 +146,6 @@ def print_item(group):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)
