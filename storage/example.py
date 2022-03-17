@@ -2,13 +2,13 @@
 Manage Storage Account - create a new storage account, read its properties,
 list all storage accounts in a given subscription or resource group,
 read and regenerate the storage account keys, and delete a storage account.
-This script expects that the following vars are set in azureAppSpConfig.json:
+This script expects that the following vars are set in azureSecretSpConfig.json:
 tenantId: your Azure Active Directory tenant id or domain
 clientId: your Azure Active Directory Application Client ID
 clientSecret: your Azure Active Directory Application Secret
 subscriptionId: your Azure Subscription Id
 location: your resource location
-resourceManagerUrl: your cloud's resource manager endpoint
+resourceManagerEndpointUrl: your cloud's resource manager endpoint
 """
 import json, random, logging
 from haikunator import Haikunator
@@ -27,7 +27,7 @@ GROUP_NAME = 'azure-sample-group-resources-{}'.format(post_fix)
 STORAGE_ACCOUNT_NAME = Haikunator().haikunate(delimiter='')
 
 def get_credentials(config):
-    mystack_cloud = get_cloud_from_metadata_endpoint(config['resourceManagerUrl'])
+    mystack_cloud = get_cloud_from_metadata_endpoint(config['resourceManagerEndpointUrl'])
     subscription_id = config['subscriptionId']
     credentials = ClientSecretCredential(
         client_id = config['clientId'],
@@ -169,6 +169,6 @@ def print_properties(props):
 
 
 if __name__ == "__main__":
-    with open('../azureAppSpConfig.json', 'r') as f:
+    with open('../azureSecretSpConfig.json', 'r') as f:
         config = json.load(f)
     run_example(config)
