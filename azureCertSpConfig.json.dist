@@ -1,0 +1,10 @@
+{
+    "clientId": "",
+    "certPass": "",
+    "certPath": "",
+    "objectId": "",
+    "subscriptionId": "",
+    "tenantId": "",
+    "resourceManagerEndpointUrl": "",
+    "location": ""
+}
