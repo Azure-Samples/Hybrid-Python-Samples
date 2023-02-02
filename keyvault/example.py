@@ -23,6 +23,7 @@ from azure.mgmt.keyvault import KeyVaultManagementClient
 from azure.profiles import KnownProfiles
 from haikunator import Haikunator
 from msrestazure.azure_cloud import get_cloud_from_metadata_endpoint
+from azure.keyvault.secrets import ApiVersion
 
 haikunator = Haikunator()
 
@@ -108,7 +109,11 @@ def run_example(config):
         created_vault = vault.result()
         print_item(created_vault)
 
-        kv_data_client = SecretClient(vault_url=created_vault.properties.vault_uri, credential=credentials)
+        kv_data_client = SecretClient(
+            vault_url=created_vault.properties.vault_uri,
+            credential=credentials,
+            api_version=ApiVersion.V7_1,
+            verify_challenge_resource=False)
 
         #set and get a secret from the vault to validate the client is authenticated
         print('creating secret...')
