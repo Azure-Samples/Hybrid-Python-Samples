@@ -6,5 +6,5 @@ azure-mgmt-keyvault
 azure-keyvault
 msrestazure
 azure-identity
-haikunator
+msal
 python-certifi-win32
