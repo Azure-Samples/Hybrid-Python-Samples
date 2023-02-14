@@ -21,14 +21,12 @@ from azure.identity import ClientSecretCredential
 from azure.keyvault.secrets import SecretClient
 from azure.mgmt.keyvault import KeyVaultManagementClient
 from azure.profiles import KnownProfiles
-from haikunator import Haikunator
 from msrestazure.azure_cloud import get_cloud_from_metadata_endpoint
 from azure.keyvault.secrets import ApiVersion
-
-haikunator = Haikunator()
+from random import randint
 
 # Keyvault 
-KV_NAME = haikunator.haikunate()
+KV_NAME = "kv-sample" + str(randint(1000,9999))
 
 def get_credentials(config):
     mystack_cloud = get_cloud_from_metadata_endpoint(
@@ -39,7 +37,9 @@ def get_credentials(config):
         client_id = config['clientId'],
         client_secret = config['clientSecret'],
         tenant_id = config['tenantId'],
-        authority = mystack_cloud.endpoints.active_directory
+        authority = mystack_cloud.endpoints.active_directory,
+        additionally_allowed_tenants = ["adfs"],
+        instance_discovery = False
     )
 
     return credentials, subscription_id, mystack_cloud
