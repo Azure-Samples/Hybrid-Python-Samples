@@ -36,9 +36,8 @@ def get_credentials(config):
     credentials = ClientSecretCredential(
         client_id = config['clientId'],
         client_secret = config['clientSecret'],
-        tenant_id = config['tenantId'],
-        authority = mystack_cloud.endpoints.active_directory,
-        additionally_allowed_tenants = ["adfs"],
+        tenant_id = "adfs",
+        authority = mystack_cloud.endpoints.active_directory.rsplit("/",1)[0],
         instance_discovery = False
     )
 
