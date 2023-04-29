@@ -4,6 +4,7 @@ azure-mgmt-compute
 azure-mgmt-storage
 azure-mgmt-keyvault
 azure-keyvault
+azure-keyvault-secrets
 msrestazure
 azure-identity
 msal
