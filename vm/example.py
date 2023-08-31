@@ -17,11 +17,8 @@ from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.compute.models import DiskCreateOption
 from azure.identity import ClientSecretCredential
 
-from msrestazure.azure_exceptions import CloudError
-
 from haikunator import Haikunator
 from msrestazure.azure_cloud import get_cloud_from_metadata_endpoint
-from msrestazure.azure_active_directory import UserPassCredentials
 from azure.profiles import KnownProfiles
 
 haikunator = Haikunator()
@@ -276,7 +273,7 @@ def run_example(config):
         async_vm_creation = compute_client.virtual_machines.begin_create_or_update(
             GROUP_NAME, VM_NAME, vm_parameters)
         async_vm_creation.result()
-    except CloudError:
+    except:
         print('A VM operation failed:', traceback.format_exc(), sep='\n')
     else:
         print('All example operations completed successfully!')
