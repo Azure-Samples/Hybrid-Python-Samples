@@ -42,7 +42,7 @@ def run_example(config):
     #
     # Create the Resource Manager Client with an Application (service principal) token provider
     #
-    # By Default, use AzureStack supported profile
+    # By Default, use Azure Stack supported profile
     try:
         logging.basicConfig(level=logging.ERROR)
         # Azure Datacenter
