@@ -30,13 +30,12 @@ Refer to this azure stack doc for more information: https://docs.microsoft.com/e
     git clone https://github.com/Azure-Samples/Hybrid-Python-Samples.git
     ```
 
-1. Install the dependencies using pip.
+1. From the root of this repository, install the dependencies using pip.
     ```
-    cd Hybrid-Storage-Python-Manage-Storage-Account
     pip install -r requirements.txt
     ```
 
-1. Create a [service principal](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals) to work against AzureStack. Make sure your service principal has [contributor/owner role](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals#assign-role-to-service-principal) on your subscription.
+1. Create a [service principal](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals) to work against Azure Stack. Make sure your service principal has [contributor/owner role](https://docs.microsoft.com/en-us/azure/azure-stack/azure-stack-create-service-principals#assign-role-to-service-principal) on your subscription.
 1. Make a copy of `azureSecretSpConfig.json.dist` and `azureCertSpConfig.json.dist`, then rename those copies to `azureSecretSpConfig.json` and `azureCertSpConfig.json` (whichever is needed).
 1. Set the following JSON properties in ./azureSecretSpConfig.json.
 
@@ -50,7 +49,7 @@ Refer to this azure stack doc for more information: https://docs.microsoft.com/e
     | `resourceManagerEndpointUrl`  | Azure Stack Hub Resource Manager Endpoint.                   |
     | `location`                    | Azure Resource location.                                     |
 
-1. Run the sample
+1. Run the sample within each individual sample folders with the following:
     ```
     python example.py
     ```
