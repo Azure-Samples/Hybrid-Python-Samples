@@ -5,6 +5,7 @@ azure-mgmt-storage
 azure-mgmt-keyvault
 azure-keyvault
 msrestazure
-azure-identity
+azure-identity==1.13.0b4
 haikunator
+msal
 python-certifi-win32

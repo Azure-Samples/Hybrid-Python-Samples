@@ -38,10 +38,10 @@ def run_example(config):
             client_id = config['clientId'],
             client_secret = config['clientSecret'],
             tenant_id = config['tenantId'],
-            authority = mystack_cloud.endpoints.active_directory
+            authority = mystack_cloud.endpoints.active_directory,
+            disable_instance_discovery = True
         )
 
-        KnownProfiles.default.use(KnownProfiles.v2020_09_01_hybrid)
         scope = "openid profile offline_access" + " " + mystack_cloud.endpoints.active_directory_resource_id + "/.default"
         
         client = ResourceManagementClient(
@@ -67,30 +67,6 @@ def run_example(config):
         print('Modify Resource Group')
         resource_group_params.update(tags={'hello': 'world'})
         print_item(client.resource_groups.create_or_update(GROUP_NAME, resource_group_params))
-
-        # Create a Key Vault in the Resource Group
-        print('Create a Key Vault via a Generic Resource Put')
-        key_vault_params = {
-            'location': location,
-            'properties': {
-                'sku': {'family': 'A', 'name': 'standard'},
-                'tenantId': config['tenantId'],
-                'accessPolicies': [],
-                'enabledForDeployment': True,
-                'enabledForTemplateDeployment': True,
-                'enabledForDiskEncryption': True
-            }
-        }
-
-        client.resources.begin_create_or_update(
-            resource_group_name=GROUP_NAME,
-            resource_provider_namespace="Microsoft.KeyVault",
-            parent_resource_path="",
-            resource_type="vaults",
-            resource_name='azureSampleVault' + datetime.utcnow().strftime("-%H%M%S"),
-            parameters = key_vault_params,
-            api_version="2016-10-01"
-        ).result()
 
         # List Resources within the group
         print('List all of the resources within the group')
